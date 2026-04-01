@@ -1,8 +1,4 @@
-INPUT_LAYER = 30
-HIDED_LAYER = 2
-HIDED_LAYER_SIZE = 16
-OUTPUT_LAYER = 2
-
+local MACRO = require("MACRO")
 local dataset = require("dataset")
 
 local reload_dataset = false
@@ -22,10 +18,10 @@ function parse_args()
 			reload_dataset = true
 
 		elseif arg == "--layer" then
-			HIDED_LAYER = arg[i + 1]
+			MACRO.HIDED_LAYER = arg[i + 1]
 
 		elseif arg == "--layer-size" then
-			HIDED_LAYER_SIZE = arg[i + 1]
+			MACRO.HIDED_LAYER_SIZE = arg[i + 1]
 
 		else
 			help()
@@ -34,9 +30,7 @@ function parse_args()
 end
 
 function check_for_reload()
-	if reload_dataset then dataset.reload() end
-
-	if not io.open("../data_train.csv", "r") or not io.open("../data_val.csv", "r") then
+	if reload_dataset or not io.open("../data_train.csv", "r") or not io.open("../data_val.csv", "r") then
 		dataset.reload()
 	end
 end
