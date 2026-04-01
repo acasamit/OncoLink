@@ -1,6 +1,7 @@
 local MACRO = require("MACRO")
 local dataset = require("dataset")
 local parsing = require("parsing")
+local ai = require("ai")
 
 local reload_dataset = false
 
@@ -12,10 +13,15 @@ function check_for_reload()
 	end
 end
 
+function check_for_training()
+	ai.start_train()
+end
+
 function main()
 	parsing.parse_args(args)
 
 	check_for_reload()
+	check_for_training()
 end
 
 main()
