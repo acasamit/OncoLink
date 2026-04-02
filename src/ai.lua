@@ -291,21 +291,105 @@ function ai.test()
 
 	print("L: "..final_loss.." P: "..precision.." R: "..recall.." F1: "..F1)
 	val:close()
+
+	return F1
+end
+
+function save_model(filename)
+	local file = assert(io.open(filename, "w"), "Failed so save best model (cannot create "..filename..")")
+	file:write("return {\n")
+	for i = 1, #layers do
+		file:write("  {\n")
+		for j = 1, #layers[i] do
+			local n = layers[i][j]
+			file:write("    {biase = " .. n.biase .. ", weight = {")
+			for k = 1, #n.weight do
+				file:write(n.weight[k] .. (k == #n.weight and "" or ", "))
+			end
+			file:write("}},\n")
+		end
+		file:write("  },\n")
+	end
+	file:write("}\n")
+	file:close()
+end
+
+function load_model(filename)
+	local data = dofile(filename)
+
+	layers = {}
+	for i = 1, #data do
+		layers[i] = {}
+		for j = 1, #data[i] do
+			layers[i][j] = {
+				biase = data[i][j].biase,
+				weight = data[i][j].weight,
+				z = 0,
+				activation = 0,
+
+				m_weight = {}, v_weight = {},
+				m_bias = 0, v_bias = 0
+			}
+			for k = 1, #layers[i][j].weight do
+				layers[i][j].m_weight[k] = 0
+				layers[i][j].v_weight[k] = 0
+			end
+		end
+	end
 end
 
 function ai.start_train()
 	setup_neural_network()
+
+	local best_f1 = 0
 
 	for i = 1, MACRO.EPOCH, 1 do
 		print("Epoch "..i.."/"..MACRO.EPOCH..":")
 		MACRO.EPOCH_INDEX = i
 
 		epoch()
+
+		local current_f1 = ai.test()
+		if current_f1 > best_f1 then
+			best_f1 = current_f1
+
+			save_model("../b1.lua")
+		end
+
 		shuffle_file("../data_train.csv", "../data_train.csv")
 	end
 
-	print("REAL TEST")
-	ai.test()
+	print("Best Model F1: "..best_f1)
+end
+
+function ai.predict(filename)
+	local file = assert(io.open(filename, "r"), "Failed to open "..filename)
+	print("Using file "..filename.."...")
+
+	load_model(MACRO.MODEL_USED)
+	print("Using model "..MACRO.MODEL_USED.."...")
+
+	for line in file:lines() do
+		local input = split(line)
+
+		for column = 1, #layers do
+			feedforward(input, column)
+
+			input = {}
+			for i = 1, #layers[column] do
+				table.insert(input, layers[column][i].activation or layers[column][i].z)
+			end
+		end
+
+		softmax(layers[#layers])
+		local P = layers[#layers][1].activation
+
+		if P > 0.5 then
+			print("M: "..string.format("%.3f", P))
+		else
+			print("B: ".. string.format("%.3f", 1 - P))
+		end
+	end
 end
 
 return ai

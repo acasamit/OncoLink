@@ -14,11 +14,15 @@ end
 
 params = {
 	{"-h,--help", function() help() end, "display this message"},
-	{"-r,--reload", function() reload_dataset = true end, "reload data.csv and recreate data_train and data_val"},
+	{"-r,--reload", function() MACRO.RELOAD_DATASET = true end, "reload data.csv and recreate data_train and data_val"},
+	{"-t,--train", function() MACRO.TRAIN = true end, "train the model event if there is a best model file"},
 	{"-l,--layer", function(i) MACRO.HIDED_LAYER = arg[i + 1] end, "specify the number of hided layer", true},
 	{"-ls,--layer-size", function(i) MACRO.HIDED_LAYER_SIZE = arg[i + 1] end, "specify the size of hided layers", true},
 	{"-e,--epoch", function(i) MACRO.EPOCH = arg[i + 1] end, "specify the number of epoch", true},
 	{"-b,--batch", function(i) MACRO.BATCH_SIZE = arg[i + 1] end, "specify the batch size", true},
+	{"-o,--output", function(i) MACRO.MODEL_NAME = arg[i + 1] end, "specify the output model name", true},
+	{"-m,--model", function(i) MACRO.MODEL_USED = arg[i + 1] end, "choose the used model", true},
+	{"-p,--predict", function(i) MACRO.PREDICT = arg[i + 1] end, "choose a data file to predict", true},
 }
 
 local function split(str)
