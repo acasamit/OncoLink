@@ -29,6 +29,7 @@ params = {
 	{"-il,--input-layer", function(value) MACRO.INPUT_LAYER = tonumber(value) end, "set the number of inputs", true},
 	{"-s,--split", function(value) MACRO.SPLIT_PERCENT = tonumber(value) end, "set how much % of data.csv must go in data_train.csv (default: 0.8)", true},
 	{"-mm,--min-max", function(value) MACRO.MIN_MAX_USED = value end, "select the min-max file to normalize the data to predict", true},
+	{"-np,--normalize-prediction", function(value) MACRO.NORMALIZE_PREDICTION = true end, "normalize the data to predict (do not change the file content)"},
 }
 
 local function split(str)

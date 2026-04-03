@@ -431,9 +431,14 @@ function ai.predict(filename)
 
 		for k = 1, #raw_input do
 			local val = raw_input[k]
-			local min = data.min[k + 1]
-			local max = data.max[k + 1]
-			table.insert(input, (val - min) / (max - min))
+
+			if MACRO.NORMALIZE_PREDICTION then
+				local min = data.min[k + 1]
+				local max = data.max[k + 1]
+				table.insert(input, (val - min) / (max - min))
+			else
+				table.insert(input, val)
+			end
 		end
 
 		for column = 1, #layers do

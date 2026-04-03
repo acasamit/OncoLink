@@ -30,5 +30,6 @@ MACRO.MIN_MAX_USED = "../min_max.lua"
 
 MACRO.PREDICT = nil
 MACRO.FORCE_NORMALIZE = false
+MACRO.NORMALIZE_PREDICTION = false
 
 return MACRO

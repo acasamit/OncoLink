@@ -52,6 +52,7 @@ You can change the number of input taked based from your dataset
 | `-o, --output` | Specify the filename for the saved model (e.g., `my_model.lua`) |
 | `-m, --model` | Choose a specific saved model file to load |
 | `-p, --predict` | Use a trained model to run predictions on a specific data file |
+| `-np, --normalize-predict` | Normalize the data to predict (do not change the file content) |
 
 ## Training Visualization
 
